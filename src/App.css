@@ -1110,13 +1110,24 @@ body {
     box-shadow: none;
   }
 
+  /* Full-bleed screens — no padding so video/glows hit the edges */
+  .landing-screen,
+  .mood-screen,
+  .loading-screen {
+    padding: 0;
+  }
+
+  .deeper-screen {
+    padding: 1.5rem;
+  }
+
   /* Tighter landing so Begin + tagline stay visible */
   .landing-video {
     height: 60%;
   }
 
   .landing-bottom {
-    padding-bottom: calc(2rem + env(safe-area-inset-bottom, 0px));
+    padding: 0 2rem calc(1.5rem + env(safe-area-inset-bottom, 0px));
     gap: 0.75rem;
   }
 
