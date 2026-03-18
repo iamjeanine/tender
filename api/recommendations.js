@@ -51,6 +51,10 @@ export default async function handler(req, res) {
 
   try {
     const { mood, context } = req.body;
+    const apiKey = process.env.ANTHROPIC_API_KEY;
+    if (!apiKey) {
+      return res.status(500).json({ error: 'API key not configured' });
+    }
 
     const anthropic = new Anthropic({
       apiKey: process.env.ANTHROPIC_API_KEY,
@@ -79,7 +83,7 @@ export default async function handler(req, res) {
 
     res.json(parsed);
   } catch (error) {
-    console.error('Error:', error.message);
-    res.status(500).json({ error: 'Failed to get recommendations' });
+    console.error('Error:', error.message, error.stack);
+    res.status(500).json({ error: 'Failed to get recommendations', detail: error.message });
   }
 }

@@ -99,9 +99,11 @@ body {
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%;
+  height: 70%;
   object-fit: cover;
   pointer-events: none;
+  mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
 }
 
 .landing-bottom {
@@ -130,7 +132,7 @@ body {
 }
 
 .landing-title {
-  font-family: 'Georgia', 'Times New Roman', serif;
+  font-family: 'Playfair Display', Georgia, serif;
   font-size: 3.5rem;
   font-weight: 400;
   letter-spacing: -0.02em;
@@ -138,7 +140,7 @@ body {
 }
 
 .landing-tagline {
-  font-family: 'Georgia', 'Times New Roman', serif;
+  font-family: 'Playfair Display', Georgia, serif;
   font-size: 1rem;
   font-weight: 300;
   color: rgba(20, 20, 50, 0.5);
