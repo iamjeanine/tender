@@ -2,6 +2,9 @@
   "framework": "vite",
   "buildCommand": "vite build",
   "outputDirectory": "dist",
+  "rewrites": [
+    { "source": "/demo", "destination": "/demo.html" }
+  ],
   "functions": {
     "api/recommendations.js": {
       "maxDuration": 30
