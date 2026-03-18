@@ -423,7 +423,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.5rem;
+  gap: 1rem;
   max-width: 100%;
   width: 100%;
   z-index: 1;
@@ -431,7 +431,7 @@ body {
 
 .deeper-prompt {
   font-family: 'Georgia', 'Times New Roman', serif;
-  font-size: 2rem;
+  font-size: 1.75rem;
   font-weight: 400;
   text-align: center;
   color: #1a1a1a;
@@ -439,9 +439,9 @@ body {
 
 .deeper-subtext {
   color: rgba(0, 0, 0, 0.5);
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   text-align: center;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
 }
 
 /* Voice transcript display */

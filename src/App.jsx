@@ -122,7 +122,7 @@ function MoodSelection({ onSelect, onHome }) {
         ‹
       </button>
 
-      <div className="mood-content">
+      <div className="mood-content" onClick={() => onSelect(currentMood)} style={{ cursor: 'pointer' }}>
         <h1 className={`mood-label ${isTransitioning ? 'transitioning' : ''}`}>
           {currentMood.label}
         </h1>
