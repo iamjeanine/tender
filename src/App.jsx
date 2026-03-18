@@ -2,11 +2,6 @@ import React, { useState, useRef } from 'react';
 import { MOODS, getRecommendations, getRecommendationsStream } from './mockRecommendations';
 import './App.css';
 
-// Haptic feedback — subtle vibrations on mobile
-function haptic(ms = 10) {
-  if (navigator.vibrate) navigator.vibrate(ms);
-}
-
 // Landing Screen — video background with ink-in-water footage
 function Landing({ onBegin }) {
   return (
@@ -24,7 +19,7 @@ function Landing({ onBegin }) {
       <div className="landing-bottom">
         <h1 className="landing-title">Tender</h1>
         <p className="landing-tagline">Feel something. Find something.</p>
-        <button className="begin-button" onClick={() => { haptic(15); onBegin(); }}>
+        <button className="begin-button" onClick={onBegin}>
           Begin
         </button>
       </div>
@@ -41,7 +36,6 @@ function MoodSelection({ onSelect, onHome }) {
 
   const goToMood = (newIndex) => {
     if (isTransitioning) return;
-    haptic(8);
     setIsTransitioning(true);
     // Fade out old label first, then swap text and fade in
     setTimeout(() => {
@@ -128,7 +122,7 @@ function MoodSelection({ onSelect, onHome }) {
         ‹
       </button>
 
-      <div className="mood-content" onClick={() => { haptic(15); onSelect(currentMood); }} style={{ cursor: 'pointer' }}>
+      <div className="mood-content" onClick={() => onSelect(currentMood)} style={{ cursor: 'pointer' }}>
         <h1 className={`mood-label ${isTransitioning ? 'transitioning' : ''}`}>
           {currentMood.label}
         </h1>
@@ -152,7 +146,7 @@ function MoodSelection({ onSelect, onHome }) {
 
         <button
           className="select-button"
-          onClick={() => { haptic(15); onSelect(currentMood); }}
+          onClick={() => onSelect(currentMood)}
         >
           Go deeper
         </button>
@@ -471,10 +465,7 @@ function getSearchLabel(format) {
 function StaggeredCard({ children, index, style, className = '' }) {
   const [visible, setVisible] = useState(false);
   React.useEffect(() => {
-    const t = setTimeout(() => {
-      setVisible(true);
-      haptic(6);
-    }, 150 + index * 120);
+    const t = setTimeout(() => setVisible(true), 150 + index * 120);
     return () => clearTimeout(t);
   }, [index]);
   return (
@@ -533,7 +524,6 @@ function Recommendations({ mood, recommendations, onBack, onHome, streaming }) {
   const canShare = typeof navigator.share === 'function';
 
   const handleShare = async () => {
-    haptic(12);
     try {
       await navigator.share({
         title: 'My Five from Tender',
