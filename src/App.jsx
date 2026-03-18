@@ -2,6 +2,11 @@ import React, { useState, useRef } from 'react';
 import { MOODS, getRecommendations, getRecommendationsStream } from './mockRecommendations';
 import './App.css';
 
+// Haptic feedback — subtle vibrations on mobile
+function haptic(ms = 10) {
+  if (navigator.vibrate) navigator.vibrate(ms);
+}
+
 // Landing Screen — video background with ink-in-water footage
 function Landing({ onBegin }) {
   return (
@@ -19,7 +24,7 @@ function Landing({ onBegin }) {
       <div className="landing-bottom">
         <h1 className="landing-title">Tender</h1>
         <p className="landing-tagline">Feel something. Find something.</p>
-        <button className="begin-button" onClick={onBegin}>
+        <button className="begin-button" onClick={() => { haptic(15); onBegin(); }}>
           Begin
         </button>
       </div>
@@ -36,6 +41,7 @@ function MoodSelection({ onSelect, onHome }) {
 
   const goToMood = (newIndex) => {
     if (isTransitioning) return;
+    haptic(8);
     setIsTransitioning(true);
     // Fade out old label first, then swap text and fade in
     setTimeout(() => {
@@ -122,7 +128,7 @@ function MoodSelection({ onSelect, onHome }) {
         ‹
       </button>
 
-      <div className="mood-content" onClick={() => onSelect(currentMood)} style={{ cursor: 'pointer' }}>
+      <div className="mood-content" onClick={() => { haptic(15); onSelect(currentMood); }} style={{ cursor: 'pointer' }}>
         <h1 className={`mood-label ${isTransitioning ? 'transitioning' : ''}`}>
           {currentMood.label}
         </h1>
@@ -146,7 +152,7 @@ function MoodSelection({ onSelect, onHome }) {
 
         <button
           className="select-button"
-          onClick={() => onSelect(currentMood)}
+          onClick={() => { haptic(15); onSelect(currentMood); }}
         >
           Go deeper
         </button>
@@ -465,7 +471,10 @@ function getSearchLabel(format) {
 function StaggeredCard({ children, index, style, className = '' }) {
   const [visible, setVisible] = useState(false);
   React.useEffect(() => {
-    const t = setTimeout(() => setVisible(true), 150 + index * 120);
+    const t = setTimeout(() => {
+      setVisible(true);
+      haptic(6);
+    }, 150 + index * 120);
     return () => clearTimeout(t);
   }, [index]);
   return (
@@ -509,10 +518,31 @@ function CompactCard({ rec, index }) {
   );
 }
 
+// Build shareable text from recommendations
+function buildShareText(mood, recommendations) {
+  const lines = recommendations.map((rec, i) =>
+    `${i + 1}. ${rec.title} (${rec.format}) - ${rec.source}`
+  );
+  return `My five from Tender, feeling ${mood.label.toLowerCase()}:\n\n${lines.join('\n')}`;
+}
+
 // Screen 3: Recommendations
 function Recommendations({ mood, recommendations, onBack, onHome, streaming }) {
   const featured = recommendations[0];
   const rest = recommendations.slice(1);
+  const canShare = typeof navigator.share === 'function';
+
+  const handleShare = async () => {
+    haptic(12);
+    try {
+      await navigator.share({
+        title: 'My Five from Tender',
+        text: buildShareText(mood, recommendations),
+      });
+    } catch (e) {
+      // User cancelled or error — ignore
+    }
+  };
 
   return (
     <div
@@ -549,9 +579,16 @@ function Recommendations({ mood, recommendations, onBack, onHome, streaming }) {
         ))}
       </div>
 
-      <button className="try-another-button" onClick={onBack}>
-        Try another mood
-      </button>
+      <div className="recommendations-actions">
+        <button className="try-another-button" onClick={onBack}>
+          Try another mood
+        </button>
+        {canShare && (
+          <button className="share-button" onClick={handleShare}>
+            Share your five
+          </button>
+        )}
+      </div>
     </div>
   );
 }
