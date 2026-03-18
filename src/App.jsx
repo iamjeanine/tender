@@ -569,16 +569,18 @@ function Recommendations({ mood, recommendations, onBack, onHome, streaming }) {
         ))}
       </div>
 
-      <div className="recommendations-actions">
-        <button className="try-another-button" onClick={onBack}>
-          Try another mood
-        </button>
-        {canShare && (
-          <button className="share-button" onClick={handleShare}>
-            Share your five
+      {!streaming && (
+        <div className="recommendations-actions">
+          <button className="try-another-button" onClick={onBack}>
+            Try another mood
           </button>
-        )}
-      </div>
+          {canShare && (
+            <button className="share-button" onClick={handleShare}>
+              Share your five
+            </button>
+          )}
+        </div>
+      )}
     </div>
   );
 }
@@ -704,29 +706,34 @@ export default function App() {
     transitionTo('deeper');
   };
 
-  const handleContextSubmit = async (userContext) => {
-    setContext(userContext);
+  const streamIn = async (mood, userContext) => {
     setRecommendations([]);
+    setStreaming(true);
     await transitionTo('loading');
 
-    const [recs] = await Promise.all([
-      getRecommendations(selectedMood.id, userContext),
-      new Promise(r => setTimeout(r, 2400)),
-    ]);
-    setRecommendations(recs);
-    transitionTo('results');
+    // Fetch all recs while loading screen shows
+    const recs = await getRecommendations(mood, userContext);
+
+    // Brief loading (1.5s feels intentional, not stalled)
+    await new Promise(r => setTimeout(r, 1500));
+
+    // Transition to results with empty list, then drip cards in
+    await transitionTo('results');
+
+    for (let i = 0; i < recs.length; i++) {
+      await new Promise(r => setTimeout(r, i === 0 ? 300 : 800));
+      setRecommendations(prev => [...prev, recs[i]]);
+    }
+    setStreaming(false);
+  };
+
+  const handleContextSubmit = async (userContext) => {
+    setContext(userContext);
+    await streamIn(selectedMood.id, userContext);
   };
 
   const handleSkip = async () => {
-    setRecommendations([]);
-    await transitionTo('loading');
-
-    const [recs] = await Promise.all([
-      getRecommendations(selectedMood.id, ''),
-      new Promise(r => setTimeout(r, 2400)),
-    ]);
-    setRecommendations(recs);
-    transitionTo('results');
+    await streamIn(selectedMood.id, '');
   };
 
   const handleBackToMood = () => {
