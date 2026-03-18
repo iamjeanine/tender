@@ -1,0 +1,216 @@
+<!-- Tender — Portfolio Embed Snippet -->
+<!-- Drop this into your portfolio page. Self-contained CSS + HTML. -->
+
+<style>
+  .tender-showcase {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4rem;
+    padding: 4rem 2rem;
+    max-width: 1100px;
+    margin: 0 auto;
+    font-family: 'Playfair Display', Georgia, serif;
+  }
+
+  /* Phone device frame */
+  .tender-device {
+    position: relative;
+    width: 375px;
+    height: 812px;
+    border-radius: 50px;
+    background: #1a1a1a;
+    box-shadow:
+      0 0 0 2px #333,
+      0 20px 60px rgba(0,0,0,0.3),
+      0 8px 20px rgba(0,0,0,0.2);
+    padding: 12px;
+    flex-shrink: 0;
+  }
+
+  /* Notch */
+  .tender-device::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 160px;
+    height: 28px;
+    background: #1a1a1a;
+    border-radius: 0 0 20px 20px;
+    z-index: 2;
+  }
+
+  /* Screen */
+  .tender-device iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 40px;
+    background: #f5f0eb;
+  }
+
+  /* Info panel */
+  .tender-info {
+    max-width: 380px;
+  }
+
+  .tender-info h2 {
+    font-size: 2.4rem;
+    font-weight: 400;
+    color: #1a1a1a;
+    margin: 0 0 0.5rem 0;
+    letter-spacing: -0.02em;
+  }
+
+  .tender-info .tagline {
+    font-size: 1.1rem;
+    font-style: italic;
+    color: #888;
+    margin: 0 0 1.5rem 0;
+  }
+
+  .tender-info .description {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 0.9rem;
+    line-height: 1.8;
+    color: #555;
+    margin: 0 0 2rem 0;
+  }
+
+  .tender-info .description p {
+    margin-bottom: 0.75rem;
+  }
+
+  .tender-info .description p:last-child {
+    margin-bottom: 0;
+  }
+
+  .tender-info .tech-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .tender-info .tech-tag {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 0.35rem 0.75rem;
+    border-radius: 20px;
+    background: #f0ebe6;
+    color: #666;
+  }
+
+  .tender-qr {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem;
+    background: #faf8f5;
+    border-radius: 12px;
+    border: 1px solid #eee;
+  }
+
+  .tender-qr-code {
+    width: 80px;
+    height: 80px;
+    border-radius: 8px;
+  }
+
+  .tender-qr-text {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 0.8rem;
+    color: #888;
+    line-height: 1.5;
+  }
+
+  .tender-qr-text strong {
+    display: block;
+    color: #444;
+    font-size: 0.85rem;
+    margin-bottom: 0.15rem;
+  }
+
+  /* Responsive — stack on narrow screens */
+  @media (max-width: 900px) {
+    .tender-showcase {
+      flex-direction: column;
+      gap: 2.5rem;
+      padding: 3rem 1.5rem;
+    }
+
+    .tender-device {
+      width: 300px;
+      height: 650px;
+      border-radius: 40px;
+      padding: 10px;
+    }
+
+    .tender-device::before {
+      width: 130px;
+      height: 24px;
+    }
+
+    .tender-device iframe {
+      border-radius: 32px;
+    }
+
+    .tender-info {
+      text-align: center;
+    }
+
+    .tender-info .tech-tags {
+      justify-content: center;
+    }
+
+    .tender-qr {
+      justify-content: center;
+    }
+  }
+</style>
+
+<section class="tender-showcase">
+  <!-- Interactive phone -->
+  <div class="tender-device">
+    <iframe
+      src="https://tender-app-gamma.vercel.app"
+      title="Tender — interactive prototype"
+      loading="lazy"
+      allow="microphone"
+    ></iframe>
+  </div>
+
+  <!-- Info panel -->
+  <div class="tender-info">
+    <h2>Tender</h2>
+    <p class="tagline">Conversation with culture</p>
+    <div class="description">
+      <p>Most algorithms learn what you click on. Tender asks how you feel.</p>
+      <p>It begins with a library of films, books, essays, poems, and podcasts chosen by people who care deeply about culture - and assembles five pieces to meet you where you are. Part human curation, part conversational system.</p>
+    </div>
+
+    <div class="tech-tags">
+      <span class="tech-tag">React</span>
+      <span class="tech-tag">Claude</span>
+      <span class="tech-tag">Vercel</span>
+      <span class="tech-tag">Emotional UX</span>
+    </div>
+
+    <!-- QR code for mobile testing -->
+    <div class="tender-qr">
+      <img
+        class="tender-qr-code"
+        src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=https://tender-app-gamma.vercel.app&bgcolor=faf8f5&color=333"
+        alt="QR code to try Tender on mobile"
+      />
+      <div class="tender-qr-text">
+        <strong>Try on your phone</strong>
+        Scan to experience Tender the way it was designed - on mobile.
+      </div>
+    </div>
+  </div>
+</section>
