@@ -1132,12 +1132,7 @@ body {
     font-size: 0.9rem;
   }
 
-  /* Safe area insets — Dynamic Island + home indicator */
-  .screen {
-    padding-top: calc(2rem + env(safe-area-inset-top, 0px));
-    padding-bottom: calc(2rem + env(safe-area-inset-bottom, 0px));
-  }
-
+  /* Safe area insets — only on interactive elements, not full screens */
   .home-link {
     top: calc(1.5rem + env(safe-area-inset-top, 0px));
   }
@@ -1146,12 +1141,11 @@ body {
     top: calc(1.5rem + env(safe-area-inset-top, 0px));
   }
 
-  .recommendations-screen {
-    padding-top: calc(1.5rem + env(safe-area-inset-top, 0px));
-    padding-bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));
-  }
-
   .mood-bottom {
     padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  .recommendations-header {
+    padding-top: env(safe-area-inset-top, 0px);
   }
 }
