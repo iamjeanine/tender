@@ -1101,8 +1101,11 @@ body {
 @media (max-width: 430px) {
   body {
     background: #fafafa;
-    align-items: stretch;
     padding: 0;
+  }
+
+  #root {
+    width: 100%;
   }
 
   .app {
