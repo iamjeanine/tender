@@ -91,6 +91,7 @@ body {
 
 .landing-screen {
   background: #ffffff;
+  padding: 0;
 }
 
 /* Video background */
@@ -98,6 +99,7 @@ body {
   position: absolute;
   top: 0;
   left: 0;
+  right: 0;
   width: 100%;
   height: 70%;
   object-fit: cover;
@@ -114,7 +116,7 @@ body {
   align-items: center;
   gap: 1rem;
   margin-top: auto;
-  padding-bottom: 2.5rem;
+  padding: 0 2rem 2.5rem;
   position: relative;
 }
 
@@ -123,8 +125,8 @@ body {
   content: '';
   position: absolute;
   bottom: 0;
-  left: -2rem;
-  right: -2rem;
+  left: 0;
+  right: 0;
   height: 420px;
   background: linear-gradient(to bottom, transparent 0%, rgba(255,255,255,0.6) 35%, rgba(255,255,255,0.92) 65%, #ffffff 100%);
   pointer-events: none;
@@ -180,6 +182,7 @@ body {
 
 .mood-screen {
   background: #fafafa;
+  padding: 0;
   touch-action: pan-y;
   user-select: none;
   cursor: grab;
@@ -613,6 +616,7 @@ body {
 
 .loading-screen {
   background: #fafafa;
+  padding: 0;
 }
 
 .loading-glow-container {
