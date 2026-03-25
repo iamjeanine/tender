@@ -16,6 +16,42 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// ─── Rate limiting (in-memory, per-IP, 20 req/min) ───
+
+const rateMap = new Map();
+
+function checkRateLimit(ip) {
+  const now = Date.now();
+  const entry = rateMap.get(ip);
+
+  if (rateMap.size > 500) {
+    for (const [key, val] of rateMap) {
+      if (now - val.start > 60_000) rateMap.delete(key);
+    }
+  }
+
+  if (!entry || now - entry.start > 60_000) {
+    rateMap.set(ip, { count: 1, start: now });
+    return true;
+  }
+
+  if (entry.count >= 20) return false;
+  entry.count++;
+  return true;
+}
+
+const MAX_MOOD_LENGTH = 50;
+const MAX_CONTEXT_LENGTH = 2_000;
+
+app.use('/api', (req, res, next) => {
+  const ip = req.headers['x-forwarded-for']?.split(',')[0]?.trim()
+    || req.socket?.remoteAddress || 'unknown';
+  if (!checkRateLimit(ip)) {
+    return res.status(429).json({ error: 'Rate limit exceeded (20 requests/min)' });
+  }
+  next();
+});
+
 const anthropic = new Anthropic({
   apiKey,
 });
@@ -68,6 +104,13 @@ app.post('/api/recommendations', async (req, res) => {
   try {
     const { mood, context } = req.body;
 
+    if (!mood || typeof mood !== 'string' || mood.length > MAX_MOOD_LENGTH) {
+      return res.status(400).json({ error: `Mood is required and must be under ${MAX_MOOD_LENGTH} characters` });
+    }
+    if (context && (typeof context !== 'string' || context.length > MAX_CONTEXT_LENGTH)) {
+      return res.status(400).json({ error: `Context must be under ${MAX_CONTEXT_LENGTH} characters` });
+    }
+
     const userMessage = context
       ? `I'm feeling ${mood}. Here's what's going on: ${context}`
       : `I'm feeling ${mood}. I don't have more context to share right now.`;
@@ -115,13 +158,21 @@ app.post('/api/recommendations', async (req, res) => {
 
 // Streaming endpoint — sends each recommendation as an SSE event
 app.post('/api/recommendations/stream', async (req, res) => {
+  const { mood, context } = req.body;
+
+  if (!mood || typeof mood !== 'string' || mood.length > MAX_MOOD_LENGTH) {
+    return res.status(400).json({ error: `Mood is required and must be under ${MAX_MOOD_LENGTH} characters` });
+  }
+  if (context && (typeof context !== 'string' || context.length > MAX_CONTEXT_LENGTH)) {
+    return res.status(400).json({ error: `Context must be under ${MAX_CONTEXT_LENGTH} characters` });
+  }
+
   res.setHeader('Content-Type', 'text/event-stream');
   res.setHeader('Cache-Control', 'no-cache');
   res.setHeader('Connection', 'keep-alive');
   res.flushHeaders();
 
   try {
-    const { mood, context } = req.body;
 
     const userMessage = context
       ? `I'm feeling ${mood}. Here's what's going on: ${context}`
