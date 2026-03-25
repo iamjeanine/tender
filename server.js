@@ -11,7 +11,6 @@ const __dirname = dirname(__filename);
 const envPath = join(__dirname, '.env');
 const result = dotenv.config({ path: envPath, override: true });
 const apiKey = process.env.ANTHROPIC_API_KEY;
-console.log('[Tender API] API key loaded:', apiKey ? `yes (${apiKey.substring(0, 12)}...)` : 'NO — key is missing!');
 
 const app = express();
 app.use(cors());
